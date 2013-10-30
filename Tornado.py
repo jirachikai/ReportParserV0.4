@@ -4,8 +4,8 @@ import tornado.web
 import tornado.httpserver
 from ReportParser.DataBase import DBReader
 from datetime import *
-import sqlite3
-import os,InformationClean
+import os,InformationClean,logging
+from tornado.options import options 
 class Application(tornado.web.Application):
 	def __init__(self):
 		handlers = [
@@ -26,11 +26,13 @@ class Application(tornado.web.Application):
 
 class IndexHandler(tornado.web.RequestHandler):
 	def get(self):
+		logging.info("**Request to IndexHandler!")
 		self.render("Index.html")		
 		
 		
 class DailyHandler(tornado.web.RequestHandler):
 	def get(self,productName,date):
+		logging.info("**Request to DailyHandler!"+productName+"  "+date)
 		DBR = DBReader.DBReader()
 		docs = DBR.ReadSingleDay(date,productName)
 		IC = InformationClean.Daily(docs)
@@ -39,6 +41,7 @@ class DailyHandler(tornado.web.RequestHandler):
 		
 class DateHandler(tornado.web.RequestHandler):
 	def get(self,productName,date):
+		logging.info("**Request to DateHandler!"+productName+"  "+date)
 		DBR = DBReader.DBReader()
 		reportDate = DBR.ReadReportDate(date,productName)
 		if reportDate:
@@ -49,6 +52,7 @@ class DateHandler(tornado.web.RequestHandler):
 			
 class ChooseDateHandler(tornado.web.RequestHandler):
 	def post(self,productName):
+		logging.info("**Request to ChooseDateHandler!" + productName)
 		date = self.get_argument('Date')
 		if date == "":
 			self.render('Wrong.html',date = date,productName = productName)
@@ -62,18 +66,21 @@ class ChooseDateHandler(tornado.web.RequestHandler):
 		
 class TodayHandler(tornado.web.RequestHandler):
 	def get(self,productName):
+		logging.info("**Request to TodayHandler!"+productName)
 		today = str(datetime.today()).split(' ')[0]
 		self.redirect('/'+productName+'/Date/'+today)
 		
 		
 class YesterdayHandler(tornado.web.RequestHandler):
 	def get(self,productName):
+		logging.info("**Request to YesterdayHandler!")
 		yesterday = str(datetime.today()-timedelta(days = 1,seconds =0, microseconds = 0)).split(' ')[0]
 		self.redirect('/'+productName+'/Date/'+yesterday)
 
 		
 class PeriodHandler(tornado.web.RequestHandler):
 	def get(self,productName,startDate,endDate):
+		logging.info("**Request to PeriodHandler!"+productName+"  "+startDate+"  "+endDate)
 		DBR = DBReader.DBReader()
 		Total_Passed_Date_Link = DBR.ReadPeriodDays(startDate,endDate,productName)
 		total = Total_Passed_Date_Link[0]
@@ -87,6 +94,7 @@ class PeriodHandler(tornado.web.RequestHandler):
 		
 class MonthlyHandler(tornado.web.RequestHandler):
 	def get(self,productName):
+		logging.info("**Request to MonthlyHandler!"+productName)
 		today = str(datetime.today()).split(' ')[0]# datetime.today() get "Y-M-D  M-S-MS" Format
 		start = str(datetime.today() - timedelta(days = 30,seconds =0, microseconds = 0)).split(' ')[0]
 		self.redirect('/'+productName+'/Period/'+start+'/'+today)
@@ -94,5 +102,6 @@ class MonthlyHandler(tornado.web.RequestHandler):
 		
 if __name__ =="__main__":
 	http_server = tornado.httpserver.HTTPServer(Application())
+	tornado.options.parse_command_line()  
 	http_server.listen(8000)
 	tornado.ioloop.IOLoop.instance().start()

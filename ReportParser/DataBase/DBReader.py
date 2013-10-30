@@ -20,7 +20,7 @@ class DBReader(object):
 				docs.append(doc)
 			conn.close()
 		except Exception as err:
-			self.__writeLog("Logging.log","FunctionReadSingleDay: " + str(err)) 
+			self.__writeLog("Logging.log","ReadSingleDay: " + str(err)) 
 		return docs
 	
 	def ReadReportDate(self,date,productName):
@@ -33,7 +33,7 @@ class DBReader(object):
 			list = cursor.fetchall()
 			l = [i[0] for i in list]
 		except Exception as err:
-			self.__writeLog("Logging.log","FunctionReadSingleDay: " + str(err))
+			self.__writeLog("Logging.log","ReadReportDate: " + str(err))
 		if l:
 			return max(l)
 		else:
@@ -67,7 +67,7 @@ class DBReader(object):
 				passed.append(line[1])
 				tempDate += timedelta(days = 1,seconds =0, microseconds = 0)
 		except Exception as err:
-			self.__writeLog("Logging.log","FunctionReadSingleDay: " + str(err))
+			self.__writeLog("Logging.log","ReadPeriodDays: " + str(err))
 			return [0,0,0,0]
 		return total,passed,d,link
 	

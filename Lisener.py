@@ -1,7 +1,16 @@
-import socket,os,ParserMain,time
+import socket,os,ParserMain,time,logging
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
 sock.bind(('sh-rd-lvrhost', 8001))  
 sock.listen(5)  
+def writeLog(filePath,errorMessage):
+	logger = logging.getLogger("database")
+	formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(message)s', '%a, %d %b %Y %H:%M:%S',) 
+	file_handler = logging.FileHandler(filePath) 
+	file_handler.setFormatter(formatter) 
+	logger.addHandler(file_handler)  
+	logger.error(errorMessage)
+	logger.removeHandler(file_handler) 
+	
 while True:  
 	connection,address = sock.accept()  
 	try:  
@@ -15,6 +24,7 @@ while True:
 		f.write(buf.decode("utf-8") + ' '+ time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))+'\n')
 		connection.send(b'OK')  
 		f.close()
-	except socket.timeout:  
+	except Exception as err:  
 		print ('time out')  
+		writeLog("Logging.log",str(err))
 connection.close()  
