@@ -1,21 +1,34 @@
 __author__ = 'Administrator'
-import configparser
+import ConfigParser
 import sqlite3,os
 DBPath = "Result.db"
 class GetFilePath(object):
 	def get(self,productName):
-		os.system("net use \\\\cn-sha-rdfs01 welcome /user:apac\\testfarm")
-		config = configparser.ConfigParser()
-		config.read('TestInfo.ini')
-		pathInfo = self.__getSinglePath(config.get('reportPath',productName))
-		reportCategory = self.__getReportCategory(productName)
-		if type(reportCategory) is type(''):
-			return self.__specificCategory(reportCategory,pathInfo)
-		classfiedDict = self.__fileClassify(reportCategory,pathInfo)
-		return classfiedDict
-		
+		try:
+			os.system("net use \\\\cn-sha-rdfs01 welcome /user:apac\\testfarm")
+			config = ConfigParser.ConfigParser()
+			config.read('TestInfo.ini')
+			pathInfo = self.__getSinglePath(config.get('reportPath',productName))
+			reportCategory = self.__getReportCategory(productName)
+			if type(reportCategory) is type(''):
+				return self.__specificCategory(reportCategory,pathInfo)
+			classfiedDict = self.__fileClassify(reportCategory,pathInfo)
+			return classfiedDict
+		except Exception as err:
+			self.__writeLog("Logging.log","GetFilePath: " + str(err))
+			return {}
+	
+	def __writeLog(self,filePath,errorMessage):
+		logger = logging.getLogger("database")
+		formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(message)s', '%a, %d %b %Y %H:%M:%S',) 
+		file_handler = logging.FileHandler(filePath) 
+		file_handler.setFormatter(formatter) 
+		logger.addHandler(file_handler)  
+		logger.error(errorMessage)
+		logger.removeHandler(file_handler) 
+	
 	def __getReportCategory(self,productName):
-		config = configparser.ConfigParser()
+		config = ConfigParser.ConfigParser()
 		config.read('TestInfo.ini')
 		testCategory = {}
 		if config.has_option('Functionality',productName):

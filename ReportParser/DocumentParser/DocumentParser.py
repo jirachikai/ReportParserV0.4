@@ -2,7 +2,7 @@ __author__ = 'Administrator'
 import csv
 import copy
 from ..Model import Test
-import configparser
+import ConfigParser
 
 class Parser(object):
     def isTestCase(self,line):
@@ -155,7 +155,7 @@ class DocumentParser(object):
                     test.TestResult = 'Passed'
 
     def __setPerformanceResult(self):
-        config = configparser.ConfigParser()
+        config = ConfigParser.ConfigParser()
         config.read('Configure.ini')
         sections = set(config.sections())
         for test in self.doc.Test:
