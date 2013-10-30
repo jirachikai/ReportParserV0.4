@@ -1,0 +1,87 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type"content="text/html;charset=urf-8"/>
+	<title>ATS Report Viewer</title>
+	<link rel="stylesheet" type="text/css" href="{{ static_url("CSS/bootstrap2.css") }}"/>
+	<link rel="stylesheet" type="text/css" href="{{ static_url("CSS/flat-ui.css") }}"/>	
+	<link rel="stylesheet" type="text/css" href="{{ static_url("CSS/buttons.css") }}"/>
+	<link rel="stylesheet" type="text/css" href="{{ static_url("CSS/tcal.css") }}"/>	
+	<script type="text/javascript" src="{{ static_url("JS/jquery-1.8.3.min.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("JS/bootstrap.min.js") }}"></script> 
+	<script type="text/javascript" src="{{ static_url("JS/bootstrap-select.js") }}"></script> 
+	<script type="text/javascript" src="{{ static_url("CSS/tcal.js") }}"></script> 
+</head>
+
+<body>
+	<div class="row" style="background:#663366; height:250px">
+		<div class="row">
+			<h1 align="center"><font color="#FFFFFF" style="font-family:'Segoe Script'">ATS Report Viewer</font></h1>
+			<h4 align="center"><font color="yellow" style="font-family:'Comic Sans MS'">Please Choose a Product:</font></h4>
+		</div>
+		<div class="row">
+			<center>
+				<div style="width:350px" >
+					<select value="0" class="select-block" id="product" onchange="change()">
+						<option value="0" selected="selected">myRIO</option>
+						<option value="1">FRC</option>
+						<option value="2">Robotics</option>
+					</select>
+				</div>
+			</center>
+		</div>
+	</div>
+	<div class="row" >
+		<h2 align="center" id="productTitle">myRIO ATS Report</h2>
+	</div>
+	<div class="row">
+		<center>
+		<div style="width:50%;height:270px;">
+			<div style="width:49.8%;float:left;">
+				<div class="button button-flat-action button-block button-large" style="height:270px">
+				<span class="glyphicon glyphicon-file" style="padding-top:50px"></span>
+				<a href="/myRIO/Yesterday" style="color:ffffff" id="last"><h2>Last <br/>Report</h2></a>
+				</div>
+			</div>
+			<div style="width:49.8%;margin-left:0.4%;float:left;">
+				<div class="button button-flat-primary button-block button-large" style="height:270px">
+				<span class="glyphicon glyphicon-folder-open" style="padding-top:50px"></span>
+				<a href="/myRIO/Monthly" style="color:ffffff" id="history"><h2>History <br/> Reports</h2></a>
+				</div>
+			</div>
+		</div>
+		</center>
+	</div>
+	
+	<div class="row">
+		<form id="chooseDate" action="/myRIO/ChooseDate" method="post">
+		<center>
+			<div style="width:50%;height:250px;margin-top:0.15%">
+				<div style="width:70%;float:left;background:#f18d05;height:250px">
+					<div style="padding-top:10%;color:#ffffff"><h4>Please Choose a Date:</h4></div>
+					<div class="has-warning" style="padding-left:25%; padding-right:25%">
+						<input type="text" name="Date" class="tcal form-control input-lg" placeholder="Please Choose a Date" value="" />
+					</div>
+				</div>
+				<button type="submit" class="button button-flat-caution button-block button-large" style="height:250px;width:30%;float:left">
+					<span class="glyphicon glyphicon-play"></span>
+					<br/>
+					<h2>Go!</h2>
+				</button>
+			</div>
+		</center>
+		</form>	
+	</div>
+</body>
+<script>
+	$("select[id='product']").selectpicker({style: 'btn-primary', menuStyle: 'dropdown-inverse'});
+	function change(){
+		var strIndex = document.getElementById("product").selectedIndex;
+		var strOptions = document.getElementById("product").options;
+		document.getElementById("productTitle").innerHTML = strOptions[strIndex].text + " ATS Report";
+		document.getElementById("last").href="/"+strOptions[strIndex].text+"/Yesterday";
+		document.getElementById("history").href="/"+strOptions[strIndex].text+"/Monthly";
+		document.getElementById("chooseDate").action="/"+strOptions[strIndex].text+"/ChooseDate";
+	}
+	$(document).ready(change())
+</script>
+</html>

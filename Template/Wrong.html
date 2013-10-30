@@ -1,0 +1,33 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type"content="text/html;charset=urf-8"/>
+	<title>Wrong</title>
+	<link rel="stylesheet" href="{{ static_url("CSS/bootstrap.css") }}"  type="text/css"/>
+	<link rel="stylesheet" type="text/css" href="{{ static_url("CSS/font-awesome.min.css") }}"/>
+	<link rel="stylesheet" type="text/css" href="{{ static_url("CSS/buttons.css") }}"/>	
+</head>
+
+<body>
+	<div class='row-fluid'>
+		<div style="text-align:center">
+			<img src="{{ static_url("image/wrong.jpg") }}" alt="" /> 
+		</div>
+	</div>
+	
+	<div class='row-fluid'>
+		<div style="text-align:center">
+			<br/>
+			<br/>
+			<h1><font color="red"><b> We haven't got {{ escape(productName) }} {{ escape(date) }}'s Report!!</b></font></h1>
+		</div>
+	</div>
+	
+	<div class='row-fluid'>
+	<center>
+		<div style="width:300px;">
+			 <a href="/" class="button button-flat-caution button-block button-small">HomePage</a>
+		</div>
+	</center>
+	</div>
+</body>
+</html>
