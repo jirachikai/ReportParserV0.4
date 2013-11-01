@@ -29,7 +29,7 @@ $(document).ready(function(){
 				PassedRate.push('0.0%');
 		var FailedLabels = [];
 		for(var i = 0;i<Failed.length;i++)
-			if(Failed[i]!=0)
+			if(Failed[i]!=0 && Failed[i]!=Total[i])
 				FailedLabels.push(Failed[i].toString());
 			else
 				FailedLabels.push('');

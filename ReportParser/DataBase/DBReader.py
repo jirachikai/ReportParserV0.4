@@ -41,6 +41,7 @@ class DBReader(object):
 	
 	def ReadPeriodDays(self,start,end,productName):
 		try:
+			print productName
 			conn = sqlite3.connect("Result.db")
 			sd = self.__getDate(start)
 			ed = self.__getDate(end)
@@ -53,7 +54,8 @@ class DBReader(object):
 			link = []
 			ip = socket.gethostbyname(socket.gethostname())
 			while tempDate <= ed:
-				DateString = self.__getDateString(tempDate)
+				DateString = tempDate.strftime('%Y-%m-%d')
+				print DateString
 				cursor = conn.execute('SELECT Total,Passed FROM BirdsView WHERE Date=? and productName=?',(DateString,productName,))
 				line = cursor.fetchone()
 				d.append(tempDate.strftime("%d") )
